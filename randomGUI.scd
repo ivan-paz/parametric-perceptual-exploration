@@ -10,9 +10,11 @@ Ndef(\x).set(\freq, 12)
 var window, system, system1;
 var data = [ ];
 var initialize, play, random, random1, random2;
+var a, b, c, d, e, f;
 var class1, class2, class3, class4;
 var postdata, ruleExtraction, showrules;
-window = Window.new("aa",Rect(650,300,500,300),resizable:true).front;
+var tdef, playclass1, playclass2, playclass3;
+window = Window.new("Exploring parameters",Rect(650,400,500,350),resizable:true).front;
 
 //------------------ load the systems    -------------------------
 system = Ndef(\x,{
@@ -41,15 +43,15 @@ play = Button.new(window,Rect(20,110,100,55));
 play.states = [["Play"],["Stop"]];
 play.action = {arg val; if(val.value==1){system.play;'playing'.postln}{system.stop;'stop'.postln}};
 
-random = Button.new(window,Rect(5,170,42,55));
+random = Button.new(window,Rect(5,170,53,55));
 random.states = [["Ran 1"]];
 random.action = {var par; par = rrand(0,400);
 system.set(\freq, par).getKeysValues.postln};
-random1 = Button.new(window,Rect(49,170,42,55));
+random1 = Button.new(window,Rect(60,170,53,55));
 random1.states = [["Ran 2"]];
 random1.action = {var par1; par1 = rrand(0,400);
 system.set(\numharm, par1).getKeysValues.postln};
-random2 = Button.new(window,Rect(93,170,42,55));
+random2 = Button.new(window,Rect(115,170,53,55));
 random2.states = [["Ran 3"]];
 random2.action = {var par2; par2 = rrand(0,10)/10;
 system.set(\amp, par2).getKeysValues.postln};
@@ -116,38 +118,63 @@ ruleExtraction.action = {
 };
 showrules = Button.new(window,Rect(200,170,100,55));
 showrules.states = [['bag of rules']];
-showrules.action = {'bag of rules :'.postln;~split.do{|x,i|
-	'Rules of Class '++i.asString.postln; x.postln}};
+showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
+	("Rules of Class " ++ (i+1).asString).postln; x.do{|y|y.postln}}};
 //----------------------------------------------------------------
-//    play
+//-----------------           play        ------------------------
+//----------------------------------------------------------------
+//   -----------------    Rule selection function
+~selectRule = { |splitRules, class|
+	var ruleTemp = [], rule = [];
+	if(splitRules[class]!=[]){
+		ruleTemp = splitRules[class].choose;
+		ruleTemp.do{ |x|
+			var value;
+			if(x.class == Array){value = x.choose; rule = rule.add(value)}{rule = rule.add(x)};
+		};
+	}{'there are no rules for this class'.postln};
+	rule
+};
+//   ----------------------------------
+
+//Ndef(\x).set(\amp, 0);
+//Ndef(\x).play
+~class = 0;
+Tdef(\sending,{ arg values, rule;
+	inf.do{
+		10.do{
+			rule = ~selectRule.value(~split,~class);
+			rule.postln;
+			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+			\amp, rule[2]);
+			[ 7,  2, 1].choose.wait;
+		};
+		10.do{
+			rule = ~selectRule.value(~split,~class);
+			rule.postln;
+			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+			\amp, rule[2]);
+			[1, 0.5, 0.25].choose.wait;
+		}
+	}
+});
+//---------------------------------------------------------
+tdef = Button.new(window,Rect(350,50,100,55));
+tdef.states = [['Sequence'],['Stop']];
+tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{Tdef(\sending).stop; 'stop'.postln }};
+
+playclass1 = Button.new(window,Rect(320,230,53,55));
+playclass1.states =[['Play-1']];
+playclass1.action = {~class = 0; 'class 1 selected'.postln};
+playclass2 = Button.new(window,Rect(380,230,53,55));
+playclass2.states =[['Play-2']];
+playclass2.action = {~class = 1; 'class 2 selected'.postln};
+playclass3 = Button.new(window,Rect(440,230,53,55));
+playclass3.states =[['Play-3']];
+playclass3.action = {~class = 2; 'class 3 selected'.postln};
 
 
 )
-~classes = ~count_classes.value(~bag)
-~split = ~splitRules_uncompleted.value(~bag)
-(
-~splitRules_uncompleted = { |rules|
-	var last, classes, array, splitedRules;
-	if(rules.size != 0){
-		last = ~classes.last;
-		classes = (1 .. last);
-		array = Array.fill2D(classes.size);
-		rules.do{ |x|
-			var evaluation;
-			evaluation = x.last;
-			classes.do{ |y, i|
-				var temporal = [];
-				if( evaluation == y) {
-					temporal = array[y-1];
-					temporal = temporal.add(x);
-					array[ y - 1 ] = temporal
-				}
-			}
-		};
-		splitedRules = array;
-	}}
-);
-[1,2,3,4].last
 
 
 
@@ -181,71 +208,6 @@ showrules.action = {'bag of rules :'.postln;~split.do{|x,i|
 Ndef(\x).stop
 )
 
-
-
-
-//_________________________________________________________
-
-//__________        rule extraction process     ___________
-
-
-// Check the data
-~data.do{ arg item; item.postln}
-
-
-//  Save data session
-//  dir = " /location/to/store/the/data"
-
-//a = ~data.writeArchive("dir/dataFile");
-
-
-//  Read session
-//   ~data = Object.readArchive("dir/dataFile");
-
-
-//  import compression functions
-"/home/ivan/documents/ia/par_by_par_compression_algorithm/GeMuSE-SuperCollider/rule_extraction_function.scd".load;
-
-//"/home/ivan/documents/ia/par_by_par_compression_algorithm/GeMuSE-SuperCollider/extra_functions.scd".load;
-
-
-//--------------------------------------------------
-//             set intervals and threshold for
-//                     each parameter
-//-------------------------------------------------
-(~intervals_and_distances = [
-      [
-              [ [0,inf],  1000 ]
-      ],
-      [
-              [ [0,inf],  1000 ]
-      ],
-	  [
-		  [ [0, inf],  1]
-	  ]
-])
-
-
-//  Extract rules
-(
-~cleanedData = ~cleanProcessingData.value(~data);
-~rules = ~subsetsCompression.value(~cleanedData,~intervals_and_distances);
-~bag = ~bagOfRules_uncompleted.value(~rules);
-~split = ~splitRules_uncompleted.value(~bag);
-)
-
-
-//   Rules for each class are stored in ~split
-
-//   Check the extracted rules
-(
-~split.do{ arg class;
-	class.do{arg rule; rule.postln}
-})
-
-
-//------------------------------------------------------------------------
-//  Play the rules and send the used patterns back to processing for visualization
 
 
 
