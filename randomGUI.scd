@@ -1,14 +1,11 @@
 //--------------------------------------------------------------
-//
+//                                                              
 //
 //--------------------------------------------------------------
-s.boot;
-//  import compression functions
-"/home/ivan/documents/in-construction/rule_extraction_function.scd".load;
-
 
 (
 var window, system, system1;
+var boot, location;
 var data = [ ];
 var initialize, play, random, random1, random2;
 var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=400,e=0,f=10;
@@ -17,8 +14,16 @@ var delete, deleteInstance, selectInstance, number=nil;
 var postdata, ruleExtraction, showrules, saveData, loadData;
 var tdef, playclass1, playclass2, playclass3;
 var try1, try2, try3;
-window = Window.new("Exploring parameters",Rect(650,320,500,400),resizable:true).front;
 
+// In OSX systems import files from the same directory
+// loadRelative("rule_extraction_function.scd");
+
+// In linux systems change the location of rule_extraction_function.scd
+location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/";
+(location ++ "rule_extraction_function.scd").load;
+
+
+window = Window.new("Exploring parameters",Rect(650,320,500,400),resizable:true).front;
 //------------------ load the systems    -------------------------
 system = Ndef(\x,{
 	arg freq, numharm, amp;
@@ -36,13 +41,19 @@ system1 = Ndef(\x1,{
 });
 
 //---------------------------------------------------------------
-initialize = Button.new(window,Rect(20,50, 100, 55));
+boot = Button.new(window, Rect(5, 5, 100, 40));
+boot.states = [['boot system'],['quit']];
+boot.action = {arg val; if(val.value == 1){s.boot;
+	'Exploring parameters interface!'.postln}{s.quit;'server off'.postln}
+};
+
+initialize = Button.new(window,Rect(5,50, 100, 55));
 initialize.states = [["Initialize data"]];
 initialize.action ={
 	data = []; //Array to store classified parameter combinations
 'data set to -> [ ] '.postln };
 
-play = Button.new(window,Rect(20,110,100,55));
+play = Button.new(window,Rect(5,110,100,55));
 play.states = [["Play"],["Stop"]];
 play.action = {arg val; if(val.value==1){system.play;'playing'.postln}{system.stop;'stop'.postln}};
 
@@ -142,13 +153,13 @@ showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
 saveData = Button.new(window, Rect(195,230, 100, 55));
 saveData.states = [['save data']];
 saveData.action = {
-	data.writeArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
+	data.writeArchive(location ++ "data");
 	'data saved into a file'.postln
 };
 loadData = Button.new(window, Rect(195,290, 100, 55));
 loadData.states = [['load data']];
 loadData.action = {
-	data = Object.readArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
+	data = Object.readArchive(location ++ "data");
 	'data loaded !'.postln
 };
 deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
