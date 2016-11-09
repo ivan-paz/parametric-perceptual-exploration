@@ -5,7 +5,8 @@
 s.boot;
 //  import compression functions
 "/home/ivan/documents/in-construction/rule_extraction_function.scd".load;
-Ndef(\x).set(\freq, 12)
+
+
 (
 var window, system, system1;
 var data = [ ];
@@ -13,8 +14,9 @@ var initialize, play, random, random1, random2;
 var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=400,e=0,f=10;
 var class1, class2, class3, class4;
 var delete;
-var postdata, ruleExtraction, showrules;
+var postdata, ruleExtraction, showrules, saveData;
 var tdef, playclass1, playclass2, playclass3;
+var try1, try2, try3;
 window = Window.new("Exploring parameters",Rect(650,320,500,400),resizable:true).front;
 
 //------------------ load the systems    -------------------------
@@ -136,6 +138,14 @@ showrules = Button.new(window,Rect(200,170,100,55));
 showrules.states = [['bag of rules']];
 showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
 	("Rules of Class " ++ (i+1).asString).postln; x.do{|y|y.postln}}};
+
+saveData = Button.new(window, Rect(200,230, 100, 55));
+saveData.states = [['save data']];
+saveData.action = {
+	data.writeArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
+	'data saved into a file'.postln
+};
+	
 //----------------------------------------------------------------
 //-----------------           play        ------------------------
 //----------------------------------------------------------------
@@ -150,6 +160,15 @@ showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
 		};
 	}{'there are no rules for this class'.postln};
 	rule
+};
+~generate = { arg rule;
+	var instance;
+	rule.collect({arg entrance;
+		var value;
+		if(entrance.class==Array){value = rrand(entrance.minItem,entrance.maxItem)}{value = entrance};
+		instance = instance.add(value);
+	});
+	instance
 };
 //   ----------------------------------
 
@@ -189,6 +208,36 @@ playclass3 = Button.new(window,Rect(440,230,53,55));
 playclass3.states =[['Play-3']];
 playclass3.action = {~class = 2; 'class 3 selected'.postln};
 
+//////////////////////////////////////////////////////////////
+//          generate function create a new instance
+//        with random values taken from the intervals
+//               created during the compression
+//////////////////////////////////////////////////////////////
+try1 = Button.new(window, Rect(320, 300, 53, 55));
+try1.states = [['Try-1']];
+try1.action = {var rule, newInstance;
+	rule = ~selectRule.value(~split,0);
+	newInstance = ~generate.value(rule);
+	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	newInstance.postln
+};
+try2 = Button.new(window, Rect(380, 300, 53, 55));
+try2.states = [['Try-2']];
+try2.action = {var rule, newInstance;
+	rule = ~selectRule.value(~split,1);
+	newInstance = ~generate.value(rule);
+	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	newInstance.postln
+};
+try3 = Button.new(window, Rect(440, 300, 53, 55));
+try3.states = [['Try-3']];
+try3.action = {var rule, newInstance;
+	rule = ~selectRule.value(~split,2);
+	newInstance = ~generate.value(rule);
+	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	newInstance.postln
+};
+
+
 
 )
-
