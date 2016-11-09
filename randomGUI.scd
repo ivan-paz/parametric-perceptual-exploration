@@ -13,8 +13,8 @@ var data = [ ];
 var initialize, play, random, random1, random2;
 var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=400,e=0,f=10;
 var class1, class2, class3, class4;
-var delete;
-var postdata, ruleExtraction, showrules, saveData;
+var delete, deleteInstance, selectInstance, number=nil;
+var postdata, ruleExtraction, showrules, saveData, loadData;
 var tdef, playclass1, playclass2, playclass3;
 var try1, try2, try3;
 window = Window.new("Exploring parameters",Rect(650,320,500,400),resizable:true).front;
@@ -109,11 +109,11 @@ delete = Button.new(window, Rect(5, 370, 163, 20));
 delete.states = [['Remove last instance']];
 delete.action = {var size = data.size; data = data[0..size-2];'last instance deleted!'.postln};
 //-------------------------------------------------------------------
-postdata = Button.new(window,Rect(200,50,100,55));
+postdata = Button.new(window,Rect(195,50,100,55));
 postdata.states = [['show data']];
-postdata.action = {'Data : '.postln;data.do{|x| x.postln}};
+postdata.action = {'Data : '.postln;data.do{|x, i| i.post;' '.post; x.postln}};
 
-ruleExtraction = Button.new(window,Rect(200,110,100,55));
+ruleExtraction = Button.new(window,Rect(195,110,100,55));
 ruleExtraction.states = [['Rule Extraction']];
 ruleExtraction.action = {
 (~intervals_and_distances = [
@@ -134,17 +134,41 @@ ruleExtraction.action = {
 ~bag = ~bagOfRules_uncompleted.value(~rules);
 ~split = ~splitRules_uncompleted.value(~bag)
 };
-showrules = Button.new(window,Rect(200,170,100,55));
+showrules = Button.new(window,Rect(195,170,100,55));
 showrules.states = [['bag of rules']];
 showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
 	("Rules of Class " ++ (i+1).asString).postln; x.do{|y|y.postln}}};
 
-saveData = Button.new(window, Rect(200,230, 100, 55));
+saveData = Button.new(window, Rect(195,230, 100, 55));
 saveData.states = [['save data']];
 saveData.action = {
 	data.writeArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
 	'data saved into a file'.postln
 };
+loadData = Button.new(window, Rect(195,290, 100, 55));
+loadData.states = [['load data']];
+loadData.action = {
+	data = Object.readArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
+	'data loaded !'.postln
+};
+deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
+deleteInstance.states = [['delete']];
+deleteInstance.action = {
+	if( (number.class!=nil)&&(data!=[]) ){
+
+		var tmp = [];
+		data[number.asInteger] = nil;
+		data.do{|x| if(x.notNil){tmp = tmp.add(x)}};
+		data = tmp;
+		'Instance deleted!  New data:'.postln;
+		data.do{|x, i| i.post;' '.post;x.postln}
+
+	}{'Error: empty data or missing index'.postln
+}};
+selectInstance = NumberBox.new(window, Rect(250, 350, 50, 40));
+selectInstance.action = { |val|
+	if((val.value).notNil){number = val.value.asInteger.postln}{
+	'Error: please insert an Index'.postln}};
 	
 //----------------------------------------------------------------
 //-----------------           play        ------------------------
@@ -241,3 +265,4 @@ try3.action = {var rule, newInstance;
 
 
 )
+
