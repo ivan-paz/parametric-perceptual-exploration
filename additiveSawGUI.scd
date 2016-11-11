@@ -136,8 +136,9 @@ ruleExtraction.action = {
 ~rules = ~subsetsCompression.value(data,~intervals_and_distances);
 // unify intervals??
 ~classes = ~count_classes.value(data);
-~bag = ~bagOfRules_uncompleted.value(~rules);
-~split = ~splitRules_uncompleted.value(~bag)
+~unique = ~unique_rules.value(~rules);
+~non_redundant_rules = ~redundant_rules.value(~unique);
+~split = ~splitRules_uncompleted.value(~non_redundant_rules);
 };
 showrules = Button.new(window,Rect(195,170,100,55));
 showrules.states = [['bag of rules']];
@@ -277,19 +278,4 @@ try3.action = {var rule, newInstance;
 };
 
 )
-
-
-~rules.do{arg x; x.do{arg y; y.postln}}
-
-~lapo = ~unique_rules.value(~rules)
-~lapo.do{|x,i| i.post;'  '.post; x.postln}
-~non_redundant_rules = ~redundant_rules.value(~lapo)
-
-
-~non_redundant_rules.do{arg x,i; i.post; '   '.post; x.postln}
-
-~unified_rules = ~unification_of_rules.value(~non_redundant_rules,~intervals_and_distances);
-
-
-~unified_rules.do{arg rule; rule.postln}
 
