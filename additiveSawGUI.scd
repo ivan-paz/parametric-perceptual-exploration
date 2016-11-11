@@ -2,7 +2,6 @@
 //                                                              
 //
 //--------------------------------------------------------------
-
 (
 var window, system, system1;
 var boot, location;
@@ -21,6 +20,7 @@ var try1, try2, try3;
 // In linux systems change the location of rule_extraction_function.scd
 location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/";
 (location ++ "rule_extraction_function.scd").load;
+(location ++ "rule_processing_functions.scd").load;
 
 
 window = Window.new("Exploring parameters Additive Saw",Rect(650,320,500,400),resizable:true).front;
@@ -277,4 +277,19 @@ try3.action = {var rule, newInstance;
 };
 
 )
+
+
+~rules.do{arg x; x.do{arg y; y.postln}}
+
+~lapo = ~unique_rules.value(~rules)
+~lapo.do{|x,i| i.post;'  '.post; x.postln}
+~non_redundant_rules = ~redundant_rules.value(~lapo)
+
+
+~non_redundant_rules.do{arg x,i; i.post; '   '.post; x.postln}
+
+~unified_rules = ~unification_of_rules.value(~non_redundant_rules,~intervals_and_distances);
+
+
+~unified_rules.do{arg rule; rule.postln}
 
