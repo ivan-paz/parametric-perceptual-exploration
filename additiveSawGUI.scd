@@ -2,6 +2,7 @@
 //                                                              
 //
 //--------------------------------------------------------------
+
 (
 var window, system, system1;
 var boot, location;
@@ -58,7 +59,7 @@ system.set(\freq, par).getKeysValues.postln};
 random1 = Button.new(window,Rect(60,170,53,55));
 random1.states = [["Ran 2"]];
 random1.action = {var par1; par1 = rrand(c,d);
-system.set(\numharm, par1).getKeysValues.postln};
+system.set(\freq2, par1).getKeysValues.postln};
 random2 = Button.new(window,Rect(115,170,53,55));
 random2.states = [["Ran 3"]];
 random2.action = {var par2; par2 = rrand(e,f)/f;
@@ -146,13 +147,13 @@ showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
 saveData = Button.new(window, Rect(195,230, 100, 55));
 saveData.states = [['save data']];
 saveData.action = {
-	data.writeArchive(location ++ "data");
+	data.writeArchive(location ++ "data1");
 	'data saved into a file'.postln
 };
 loadData = Button.new(window, Rect(195,290, 100, 55));
 loadData.states = [['load data']];
 loadData.action = {
-	data = Object.readArchive(location ++ "data");
+	data = Object.readArchive(location ++ "data1");
 	'data loaded !'.postln
 };
 deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
@@ -199,23 +200,20 @@ selectInstance.action = { |val|
 	instance
 };
 //   ----------------------------------
-
-//Ndef(\x).set(\amp, 0);
-//Ndef(\x).play
 ~class = 0;
 Tdef(\sending,{ arg values, rule;
 	inf.do{
 		10.do{
 			rule = ~selectRule.value(~split,~class);
 			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+			Ndef(\x).set(\freq, rule[0], \freq2, rule[1],
 			\amp, rule[2]);
 			[ 7, 2, 1].choose.wait;
 		};
 		5.do{
 			rule = ~selectRule.value(~split,~class);
 			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+			Ndef(\x).set(\freq, rule[0], \freq2, rule[1],
 			\amp, rule[2]);
 			[1, 0.5, 0.25].choose.wait;
 		}
@@ -228,13 +226,25 @@ tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{T
 
 playclass1 = Button.new(window,Rect(320,230,53,55));
 playclass1.states =[['Play-1']];
-playclass1.action = {~class = 0; 'class 1 selected'.postln};
+playclass1.action = {var rule;
+	~class = 0; 'class 1 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq,rule[0],\freq2,rule[1],\amp,rule[2]);
+};
 playclass2 = Button.new(window,Rect(380,230,53,55));
 playclass2.states =[['Play-2']];
-playclass2.action = {~class = 1; 'class 2 selected'.postln};
+playclass2.action = {var rule;
+	~class = 1; 'class 2 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq,rule[0],\freq2,rule[1],\amp,rule[2])
+};
 playclass3 = Button.new(window,Rect(440,230,53,55));
 playclass3.states =[['Play-3']];
-playclass3.action = {~class = 2; 'class 3 selected'.postln};
+playclass3.action = {var rule;
+	~class = 2; 'class 3 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq, rule[0], \freq2, rule[1], \amp, rule[2])
+};
 
 //////////////////////////////////////////////////////////////
 //          generate function create a new instance
@@ -244,29 +254,27 @@ playclass3.action = {~class = 2; 'class 3 selected'.postln};
 try1 = Button.new(window, Rect(320, 300, 53, 55));
 try1.states = [['Try-1']];
 try1.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,0);
+	rule = ~split[0].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try2 = Button.new(window, Rect(380, 300, 53, 55));
 try2.states = [['Try-2']];
 try2.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,1);
+	rule = ~split[1].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try3 = Button.new(window, Rect(440, 300, 53, 55));
 try3.states = [['Try-3']];
 try3.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,2);
+	rule = ~split[2].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
-
-
 
 )
 
