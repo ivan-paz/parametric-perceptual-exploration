@@ -13,6 +13,7 @@ var delete, deleteInstance, selectInstance, number=nil;
 var postdata, ruleExtraction, showrules, saveData, loadData;
 var tdef, playclass1, playclass2, playclass3;
 var try1, try2, try3;
+var csvdata, csvrules;
 
 // In OSX systems import files from the same directory
 // loadRelative("rule_extraction_function.scd");
@@ -223,6 +224,26 @@ Tdef(\sending,{ arg values, rule;
 tdef = Button.new(window,Rect(350,50,100,55));
 tdef.states = [['Sequence'],['Stop']];
 tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{Tdef(\sending).stop; 'stop'.postln }};
+
+csvdata = Button.new(window, Rect(350,110,55,55));
+csvdata.states = [['data csv']];
+csvdata.action = {
+	f = File(location ++ "data.csv","w");
+	data.do{arg x, i;
+		        f.write(i + "," + x + "\n");
+			};
+			f.close
+};
+csvrules = Button.new(window, Rect(410,110,55,55));
+csvrules.states = [['rules csv']];
+csvrules.action = {
+	f = File(location ++ "rules.csv","w");
+	~split.do{arg x;
+		x.do{arg y,j;
+		f.write(j + "," + y + "\n")
+	}};
+	f.close
+};
 
 playclass1 = Button.new(window,Rect(320,230,53,55));
 playclass1.states =[['Play-1']];
