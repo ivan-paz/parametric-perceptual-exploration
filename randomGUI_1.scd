@@ -23,16 +23,13 @@ location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-
 (location ++ "rule_processing_functions.scd").load;
 
 
-window = Window.new("Exploring parameters Additive Saw",Rect(650,320,500,400),resizable:true).front;
+window = Window.new("Exploring parameters Blip",Rect(650,320,500,400),resizable:true).front;
 //------------------ load the systems    -------------------------
 system = Ndef(\x,{
-	arg freq, freq2, amp;
+	arg freq, numharm, amp;
 	var sig;
-	sig = Saw.ar(freq) + Saw.ar(freq - 1);
-	sig = sig + ( Saw.ar(freq2) + Saw.ar(freq2) );
-	sig = sig + Impulse.ar(20, amp/4);
-	sig = sig!2;
-	sig = FreeVerb.ar(sig, 0.33, 0.5, 0.5, 1) * amp;
+	sig = Blip.ar(freq, numharm)!2;
+	sig = FreeVerb.ar(sig, 0.23, 0.5, 0.5, 1) * amp;
 });
 //---------------------------------------------------------------
 boot = Button.new(window, Rect(5, 5, 100, 40));
@@ -59,7 +56,7 @@ system.set(\freq, par).getKeysValues.postln};
 random1 = Button.new(window,Rect(60,170,53,55));
 random1.states = [["Ran 2"]];
 random1.action = {var par1; par1 = rrand(c,d);
-system.set(\freq2, par1).getKeysValues.postln};
+system.set(\numharm, par1).getKeysValues.postln};
 random2 = Button.new(window,Rect(115,170,53,55));
 random2.states = [["Ran 3"]];
 random2.action = {var par2; par2 = rrand(e,f)/f;
@@ -126,7 +123,7 @@ ruleExtraction.action = {
 		[ [0,inf],  10 ]
 	],
 	[
-		[ [0,inf],  5 ]
+		[ [0,inf],  200 ]
 	],
 	[
 		[ [0, inf],  1 ]
@@ -148,13 +145,13 @@ showrules.action = {'-----------------------------'.postln;'Bag of rules :'.post
 saveData = Button.new(window, Rect(195,230, 100, 55));
 saveData.states = [['save data']];
 saveData.action = {
-	data.writeArchive(location ++ "data1");
+	data.writeArchive(location ++ "data");
 	'data saved into a file'.postln
 };
 loadData = Button.new(window, Rect(195,290, 100, 55));
 loadData.states = [['load data']];
 loadData.action = {
-	data = Object.readArchive(location ++ "data1");
+	data = Object.readArchive(location ++ "data");
 	'data loaded !'.postln
 };
 deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
@@ -179,6 +176,8 @@ selectInstance.action = { |val|
 //----------------------------------------------------------------
 //-----------------           play        ------------------------
 //----------------------------------------------------------------
+
+
 //   -----------------    Rule selection function
 ~selectRule = { |splitRules, class|
 	var ruleTemp = [], rule = [];
@@ -207,14 +206,14 @@ Tdef(\sending,{ arg values, rule;
 		10.do{
 			rule = ~selectRule.value(~split,~class);
 			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \freq2, rule[1],
+			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
 			\amp, rule[2]);
 			[ 7, 3, 5].choose.wait;
 		};
 		5.do{
 			rule = ~selectRule.value(~split,~class);
 			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \freq2, rule[1],
+			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
 			\amp, rule[2]);
 			[1, 0.5, 0.25].choose.wait;
 		}
@@ -230,21 +229,21 @@ playclass1.states =[['Play-1']];
 playclass1.action = {var rule;
 	~class = 0; 'class 1 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
-	system.set(\freq,rule[0],\freq2,rule[1],\amp,rule[2]);
+	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2]);
 };
 playclass2 = Button.new(window,Rect(380,230,53,55));
 playclass2.states =[['Play-2']];
 playclass2.action = {var rule;
 	~class = 1; 'class 2 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
-	system.set(\freq,rule[0],\freq2,rule[1],\amp,rule[2])
+	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2])
 };
 playclass3 = Button.new(window,Rect(440,230,53,55));
 playclass3.states =[['Play-3']];
 playclass3.action = {var rule;
 	~class = 2; 'class 3 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
-	system.set(\freq, rule[0], \freq2, rule[1], \amp, rule[2])
+	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2])
 };
 
 //////////////////////////////////////////////////////////////
@@ -257,7 +256,7 @@ try1.states = [['Try-1']];
 try1.action = {var rule, newInstance;
 	rule = ~split[0].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try2 = Button.new(window, Rect(380, 300, 53, 55));
@@ -265,7 +264,7 @@ try2.states = [['Try-2']];
 try2.action = {var rule, newInstance;
 	rule = ~split[1].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try3 = Button.new(window, Rect(440, 300, 53, 55));
@@ -273,7 +272,7 @@ try3.states = [['Try-3']];
 try3.action = {var rule, newInstance;
 	rule = ~split[2].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, newInstance[0], \freq2, newInstance[1], \amp, newInstance[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 
