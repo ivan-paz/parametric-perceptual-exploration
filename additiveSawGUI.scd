@@ -124,7 +124,7 @@ ruleExtraction.states = [['Rule Extraction']];
 ruleExtraction.action = {
 (~intervals_and_distances = [
 	[
-		[ [0,inf],  20 ]
+		[ [0,inf],  10 ]
 	],
 	[
 		[ [0,inf],  10 ]

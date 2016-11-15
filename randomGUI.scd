@@ -1,45 +1,42 @@
 //--------------------------------------------------------------
-//                                                              
-//
+//    A GUI interface for perceptual parametric exploration   --
+//    of a simple generative system stored int an Ndef        --
+//                                                            --
+//                           Blip                             --
+//                         Ivan Paz                           --
 //--------------------------------------------------------------
-
 (
 var window, system, system1;
 var boot, location;
 var data = [ ];
 var initialize, play, random, random1, random2;
-var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=400,e=0,f=10;
+var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=300,e=0,f=10;
 var class1, class2, class3, class4;
 var delete, deleteInstance, selectInstance, number=nil;
-var postdata, ruleExtraction, showrules, saveData, loadData;
+var name, filename;
+var postdata, ruleExtraction, split, saveData, loadData;
 var tdef, playclass1, playclass2, playclass3;
 var try1, try2, try3;
+var csvdata, csvrules;
 
 // In OSX systems import files from the same directory
 // loadRelative("rule_extraction_function.scd");
 
 // In linux systems change the location of rule_extraction_function.scd
 location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/";
-(location ++ "rule_extraction_function.scd").load;
+(location ++ "rule_extraction_git.scd").load;
+//(location ++ "rule_processing_functions.scd").load;
 
 
-window = Window.new("Exploring parameters",Rect(650,320,500,400),resizable:true).front;
-//------------------ load the systems    -------------------------
+//--------------------------     WINDOW   --------------------------//
+window = Window.new("Exploring parameters Blip",Rect(650,320,500,450),resizable:true).front;
+//------------------          system to explore     ------------------
 system = Ndef(\x,{
 	arg freq, numharm, amp;
 	var sig;
-	sig = Blip.ar(freq,numharm) !2 * amp;
+	sig = Blip.ar(freq, numharm)!2;
+	sig = FreeVerb.ar(sig, 0.23, 0.5, 0.5, 1) * amp;
 });
-system1 = Ndef(\x1,{
-	arg freq, freq2, amp;
-	var sig;
-	sig = Saw.ar(freq) + Saw.ar(freq - 1);
-	sig = sig + ( Saw.ar(freq2) + Saw.ar(freq2) );
-	sig = sig + Impulse.ar(20, amp/4);
-	sig = sig!2;
-	sig = FreeVerb.ar(sig, 0.33, 0.5, 0.5, 1) * amp;
-});
-
 //---------------------------------------------------------------
 boot = Button.new(window, Rect(5, 5, 100, 40));
 boot.states = [['boot system'],['quit']];
@@ -85,7 +82,7 @@ box5.action = {|val| e = val.value.postln};
 box6 = NumberBox(window, Rect(115,265, 50,30)).value_(0.0);
 box6.action = {|val| f = val.value.postln};
 
-//   classification ------------------
+//----------------      classification        ----- ------------------
 // 1
 class1 = Button.new(window,Rect(5,310,53,55));
 class1.states =[['Class 1']];
@@ -119,20 +116,35 @@ class3.action = {var values, instance = [];
 delete = Button.new(window, Rect(5, 370, 163, 20));
 delete.states = [['Remove last instance']];
 delete.action = {var size = data.size; data = data[0..size-2];'last instance deleted!'.postln};
+
 //-------------------------------------------------------------------
-postdata = Button.new(window,Rect(195,50,100,55));
+//                        processing data                       -----
+//                                                              -----
+//-------------------------------------------------------------------
+name =  TextField(window, Rect(165, 10, 150, 20));
+name.string = "file name";
+name.action = {arg field; field.value.postln; filename=field.value};
+
+loadData = Button.new(window, Rect(195, 40, 100, 30));
+loadData.states = [['load data']];
+loadData.action = {
+	'loading data . . . '.postln;
+	data = Object.readArchive(location ++ filename)
+};
+
+postdata = Button.new(window,Rect(195,80, 100, 40));
 postdata.states = [['show data']];
 postdata.action = {'Data : '.postln;data.do{|x, i| i.post;' '.post; x.postln}};
 
-ruleExtraction = Button.new(window,Rect(195,110,100,55));
+ruleExtraction = Button.new(window,Rect(195,130,100, 40));
 ruleExtraction.states = [['Rule Extraction']];
 ruleExtraction.action = {
 (~intervals_and_distances = [
 	[
-		[ [0,inf],  1000 ]
+		[ [0,inf],  10 ]
 	],
 	[
-		[ [0,inf],  1000 ]
+		[ [0,inf],  200 ]
 	],
 	[
 		[ [0, inf],  1 ]
@@ -140,28 +152,51 @@ ruleExtraction.action = {
 ]);
 //  Extract rules
 ~rules = ~subsetsCompression.value(data,~intervals_and_distances);
-// unify intervals??
-~classes = ~count_classes.value(data);
-~bag = ~bagOfRules_uncompleted.value(~rules);
-~split = ~splitRules_uncompleted.value(~bag)
+'----------------------------------------------'.postln;
+'Rules : '.postln;
+~rules.do{arg x, i; 'permutation: '.post;i.postln;x.do{arg y; y.postln}};
+'------------------------------------------------------------'.postln;
 };
-showrules = Button.new(window,Rect(195,170,100,55));
-showrules.states = [['bag of rules']];
-showrules.action = {'Bag of rules :'.postln; ~split.do{|x,i|
-	("Rules of Class " ++ (i+1).asString).postln; x.do{|y|y.postln}}};
+//~unique_rules function *
+split = Button.new(window,Rect(195,180,105,40));
+split.states = [['rules by classes']];
+split.action = {
+~bagOfRules = ~bagOfRules_uncompleted.value(~rules);
+~nonRedundant = ~redundant_rules.value(~bagOfRules);
+'------------------------------------------------------------'.postln;
+~classes = ~count_classes.value(data);
+~split = ~splitRules_uncompleted.value(~nonRedundant);
+'Rules by classes : '.postln;
+~split.do{arg x,i; 'class : '.post;(i+1).postln;x.do{arg y,j; j.post;'  '.post;y.postln}}
+};
 
-saveData = Button.new(window, Rect(195,230, 100, 55));
+saveData = Button.new(window, Rect(195, 230, 105, 30));
 saveData.states = [['save data']];
 saveData.action = {
-	data.writeArchive(location ++ "data");
+	data.writeArchive(location ++ filename);
 	'data saved into a file'.postln
 };
-loadData = Button.new(window, Rect(195,290, 100, 55));
-loadData.states = [['load data']];
-loadData.action = {
-	data = Object.readArchive(location ++ "data");
-	'data loaded !'.postln
+
+csvdata = Button.new(window, Rect(180,270,65,30));
+csvdata.states = [['data csv']];
+csvdata.action = {
+	f = File(location ++ "data.csv","w");
+	data.do{arg x, i;
+		f.write(i + "," + x + "\n");
+	};
+	f.close
 };
+csvrules = Button.new(window, Rect(250,270,65,30));
+csvrules.states = [['rules csv']];
+csvrules.action = {
+	f = File(location ++ "rules.csv","w");
+	~split.do{arg x;
+		x.do{arg y,j;
+			f.write(j + "," + y + "\n")
+		}};
+		f.close
+};
+
 deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
 deleteInstance.states = [['delete']];
 deleteInstance.action = {
@@ -182,8 +217,10 @@ selectInstance.action = { |val|
 	'Error: please insert an Index'.postln}};
 	
 //----------------------------------------------------------------
-//-----------------           play        ------------------------
+//                             play                        -------
 //----------------------------------------------------------------
+
+
 //   -----------------    Rule selection function
 ~selectRule = { |splitRules, class|
 	var ruleTemp = [], rule = [];
@@ -206,9 +243,6 @@ selectInstance.action = { |val|
 	instance
 };
 //   ----------------------------------
-
-//Ndef(\x).set(\amp, 0);
-//Ndef(\x).play
 ~class = 0;
 Tdef(\sending,{ arg values, rule;
 	inf.do{
@@ -217,7 +251,7 @@ Tdef(\sending,{ arg values, rule;
 			rule.postln;
 			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
 			\amp, rule[2]);
-			[ 7, 2, 1].choose.wait;
+			[ 7, 3, 5].choose.wait;
 		};
 		5.do{
 			rule = ~selectRule.value(~split,~class);
@@ -235,13 +269,25 @@ tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{T
 
 playclass1 = Button.new(window,Rect(320,230,53,55));
 playclass1.states =[['Play-1']];
-playclass1.action = {~class = 0; 'class 1 selected'.postln};
+playclass1.action = {var rule;
+	~class = 0; 'class 1 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2]);
+};
 playclass2 = Button.new(window,Rect(380,230,53,55));
 playclass2.states =[['Play-2']];
-playclass2.action = {~class = 1; 'class 2 selected'.postln};
+playclass2.action = {var rule;
+	~class = 1; 'class 2 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2])
+};
 playclass3 = Button.new(window,Rect(440,230,53,55));
 playclass3.states =[['Play-3']];
-playclass3.action = {~class = 2; 'class 3 selected'.postln};
+playclass3.action = {var rule;
+	~class = 2; 'class 3 selected'.postln;
+	rule = ~selectRule.value(~split,~class).postln;
+	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2])
+};
 
 //////////////////////////////////////////////////////////////
 //          generate function create a new instance
@@ -251,29 +297,31 @@ playclass3.action = {~class = 2; 'class 3 selected'.postln};
 try1 = Button.new(window, Rect(320, 300, 53, 55));
 try1.states = [['Try-1']];
 try1.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,0);
+	rule = ~split[0].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try2 = Button.new(window, Rect(380, 300, 53, 55));
 try2.states = [['Try-2']];
 try2.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,1);
+	rule = ~split[1].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 try3 = Button.new(window, Rect(440, 300, 53, 55));
 try3.states = [['Try-3']];
 try3.action = {var rule, newInstance;
-	rule = ~selectRule.value(~split,2);
+	rule = ~split[2].choose;
 	newInstance = ~generate.value(rule);
-	system.set(\freq, rule[0], \numharm, rule[1], \amp, rule[2]);
+	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
 
 
-
 )
+
+
+
 
