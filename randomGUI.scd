@@ -18,7 +18,8 @@ var postdata, ruleExtraction, split, saveData, loadData;
 var csvdata, csvrules;
 var tdef, playclass1, playclass2, playclass3;
 var try1, try2, try3;
-var text;
+var text, text1;
+var noclass;
 
 // In OSX systems import files from the same directory
 // loadRelative("rule_extraction_function.scd");
@@ -30,7 +31,7 @@ location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-
 
 
 //--------------------------     WINDOW   --------------------------//
-window = Window.new("Exploring parameters Blip",Rect(650,320,500,450),resizable:true).front;
+window = Window.new("Exploring parameters Blip",Rect(650,320,550,450),resizable:true).front;
 //------------------          system to explore     ------------------
 system = Ndef(\x,{
 	arg freq, numharm, amp;
@@ -85,7 +86,7 @@ box6.action = {|val| f = val.value.postln};
 
 //----------------      classification        ----- ------------------
 // 1
-class1 = Button.new(window,Rect(5,310,53,55));
+class1 = Button.new(window,Rect(5,380,53,55));
 class1.states =[['Class 1']];
 class1.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 1'.postln;
@@ -95,7 +96,7 @@ class1.action = {var values, instance = [];
 	'combination already in data'.postln}
 };
 // 2
-class2 = Button.new(window,Rect(60,310,53,55));
+class2 = Button.new(window,Rect(60,380,53,55));
 class2.states =[['Class 2']];
 class2.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 2'.postln;
@@ -105,7 +106,7 @@ class2.action = {var values, instance = [];
 		'combination already in data'.postln}
 };
 // 3
-class3 = Button.new(window,Rect(115,310,53,55));
+class3 = Button.new(window,Rect(115,380,53,55));
 class3.states =[['Class 3']];
 class3.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 3'.postln;
@@ -114,15 +115,19 @@ class3.action = {var values, instance = [];
 	if(data.indexOfEqual(instance).isNil){data = data.add(instance)}{
 		'combination already in data'.postln}
 };
-delete = Button.new(window, Rect(5, 370, 163, 20));
+delete = Button.new(window, Rect(180, 330, 135, 30));
 delete.states = [['Remove last instance']];
 delete.action = {var size = data.size;
 	if(data.size==1){data = [];'last instance deleted!'.postln}{data = data[0..size - 2];'last instance deleted!'.postln}};
+
+
 //-------------------------------------------------------------------
 //                        processing data                       -----
 //                                                              -----
 //-------------------------------------------------------------------
-name =  TextField(window, Rect(165, 10, 150, 20));
+
+
+name =  TextField(window, Rect(195, 10, 100, 20));
 name.string = "file name";
 name.action = {arg field; field.value.postln; filename=field.value};
 
@@ -133,14 +138,13 @@ loadData.action = {
 	data = Object.readArchive(location ++ filename)
 };
 
-postdata = Button.new(window,Rect(195,80, 100, 40));
+postdata = Button.new(window,Rect(195, 80, 100, 30));
 postdata.states = [['show data']];
 postdata.action = {'Data : '.postln;data.do{|x, i| i.post;' '.post; x.postln}};
 
-ruleExtraction = Button.new(window,Rect(195,130,100, 40));
+ruleExtraction = Button.new(window,Rect(195, 120, 100, 30));
 ruleExtraction.states = [['Rule Extraction']];
 ruleExtraction.action = {
-
 (~intervals_and_distances = [
 	[
 		[ [0,inf],  10 ]
@@ -152,7 +156,6 @@ ruleExtraction.action = {
 		[ [0, inf],  1 ]
 	]
 ]);
-
 //  Extract rules
 ~rules = ~subsetsCompression.value(data,~intervals_and_distances);
 '----------------------------------------------'.postln;
@@ -160,8 +163,9 @@ ruleExtraction.action = {
 ~rules.do{arg x, i; 'permutation: '.post;i.postln;x.do{arg y; y.postln}};
 '------------------------------------------------------------'.postln;
 };
-//~unique_rules function *
-split = Button.new(window,Rect(195,180,105,40));
+
+
+split = Button.new(window,Rect(195,160,100,30));
 split.states = [['rules by classes']];
 split.action = {
 ~bagOfRules = ~bagOfRules_uncompleted.value(~rules);
@@ -173,14 +177,17 @@ split.action = {
 ~split.do{arg x,i; 'class : '.post;(i+1).postln;x.do{arg y,j; j.post;'  '.post;y.postln}}
 };
 
-saveData = Button.new(window, Rect(195, 230, 105, 25));
+text = StaticText.new(window,Rect(195,200,100,10)).string_("-----------------------------");
+
+
+saveData = Button.new(window, Rect(195, 220, 105, 25));
 saveData.states = [['save data']];
 saveData.action = {
 	data.writeArchive(location ++ filename);
 	'data saved into a file'.postln
 };
 
-csvdata = Button.new(window, Rect(180,270,65,30));
+csvdata = Button.new(window, Rect(180,255,65,30));
 csvdata.states = [['data csv']];
 csvdata.action = {
 	f = File(location ++ "data.csv","w");
@@ -189,7 +196,7 @@ csvdata.action = {
 	};
 	f.close
 };
-csvrules = Button.new(window, Rect(250,270,65,30));
+csvrules = Button.new(window, Rect(250,255,65,30));
 csvrules.states = [['rules csv']];
 csvrules.action = {
 	f = File(location ++ "rules.csv","w");
@@ -200,7 +207,7 @@ csvrules.action = {
 		f.close
 };
 
-deleteInstance = Button.new(window, Rect(195, 350, 50, 40));
+deleteInstance = Button.new(window, Rect(180, 295, 60, 30));
 deleteInstance.states = [['delete']];
 deleteInstance.action = {
 	if( (number.class!=nil)&&(data!=[]) ){
@@ -214,16 +221,17 @@ deleteInstance.action = {
 
 	}{'Error: empty data or missing index'.postln
 }};
-selectInstance = NumberBox.new(window, Rect(250, 350, 50, 40));
+selectInstance = NumberBox.new(window, Rect(250, 295, 60, 30));
 selectInstance.action = { |val|
 	if((val.value).notNil){number = val.value.asInteger.postln}{
 	'Error: please insert an Index'.postln}};
-	
+
+
+
+
 //----------------------------------------------------------------
 //                             play                        -------
 //----------------------------------------------------------------
-
-
 //   -----               Rule selection functions    ------------
 ~selectRule = { |splitRules, class|
 	var ruleTemp = [], rule = [];
@@ -270,21 +278,21 @@ tdef = Button.new(window,Rect(350,170,100,50));
 tdef.states = [['Sequence'],['Stop']];
 tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{Tdef(\sending).stop; 'stop'.postln }};
 
-playclass1 = Button.new(window,Rect(320,230,53,55));
+playclass1 = Button.new(window,Rect(330,230,53,55));
 playclass1.states =[['Play-1']];
 playclass1.action = {var rule;
 	~class = 0; 'class 1 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
 	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2]);
 };
-playclass2 = Button.new(window,Rect(380,230,53,55));
+playclass2 = Button.new(window,Rect(390,230,53,55));
 playclass2.states =[['Play-2']];
 playclass2.action = {var rule;
 	~class = 1; 'class 2 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
 	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2])
 };
-playclass3 = Button.new(window,Rect(440,230,53,55));
+playclass3 = Button.new(window,Rect(450,230,53,55));
 playclass3.states =[['Play-3']];
 playclass3.action = {var rule;
 	~class = 2; 'class 3 selected'.postln;
@@ -297,7 +305,7 @@ playclass3.action = {var rule;
 //        with random values taken from the intervals
 //               created during the compression
 //////////////////////////////////////////////////////////////
-try1 = Button.new(window, Rect(320, 300, 53, 55));
+try1 = Button.new(window, Rect(330, 300, 53, 55));
 try1.states = [['Try-1']];
 try1.action = {var rule, newInstance;
 	rule = ~split[0].choose;
@@ -305,7 +313,7 @@ try1.action = {var rule, newInstance;
 	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
-try2 = Button.new(window, Rect(380, 300, 53, 55));
+try2 = Button.new(window, Rect(390, 300, 53, 55));
 try2.states = [['Try-2']];
 try2.action = {var rule, newInstance;
 	rule = ~split[1].choose;
@@ -313,7 +321,7 @@ try2.action = {var rule, newInstance;
 	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
-try3 = Button.new(window, Rect(440, 300, 53, 55));
+try3 = Button.new(window, Rect(450, 300, 53, 55));
 try3.states = [['Try-3']];
 try3.action = {var rule, newInstance;
 	rule = ~split[2].choose;
@@ -322,14 +330,14 @@ try3.action = {var rule, newInstance;
 	newInstance.postln
 };
 
-text = StaticText.new(window,Rect(320,340,200,50)).string_("----------------------------------------");
+text1 = StaticText.new(window,Rect(330,340,200,50)).string_("----------------------------------------");
 
 //------------------------------------------------------------//
 //                  classify unseen combinations              //
 //                         if necessary                       //
 //----------------------------------------------------------- //
 // 1
-class1 = Button.new(window,Rect(320,370,53,55));
+class1 = Button.new(window,Rect(330,380,53,55));
 class1.states =[['Class 1']];
 class1.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 1'.postln;
@@ -340,7 +348,7 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance
 	'combination already in data'.postln}
 };
 // 2
-class2 = Button.new(window,Rect(320+60,370,53,55));
+class2 = Button.new(window,Rect(330+60,380,53,55));
 class2.states =[['Class 2']];
 class2.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 2'.postln;
@@ -351,7 +359,7 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance
 	'combination already in data'.postln}
 };
 // 3
-class3 = Button.new(window,Rect(320+120,370,53,55));
+class3 = Button.new(window,Rect(330+120,380,53,55));
 class3.states =[['Class 3']];
 class3.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 3'.postln;
@@ -361,6 +369,16 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance
 )}{
 	'combination already in data'.postln}
 };
+
+noclass = Button.new(window, Rect(180, 380, 135 ,40));
+noclass.states = [['no-class combination']];
+noclass.action = {var values, instance = [];
+values = system.getKeysValues.post;" this combination doesn't belong to any     class".postln;
+values.do{|x| instance = instance.add(x[1])};
+instance = instance.add(4);
+if(data.indexOfEqual(instance).isNil){data = data.add(instance)}{
+'this combination was already saved'.postln}
+}
 
 )
 

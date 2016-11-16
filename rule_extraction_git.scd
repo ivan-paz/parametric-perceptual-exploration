@@ -217,21 +217,25 @@
 	deleteInstances
 }
 );
+
+
 //------------------------------------------------------------------
 //                     clean the extracted                     .....
 //                            rules                            .....
 //------------------------------------------------------------------
+
+
 (
 ~bagOfRules_uncompleted = { |rules|
 	var bag = [];
 	rules.do{ |x|
 		x.do{ |y|
 			y.do{|z|
-			if(z.class == Array){
+		//	if(z.class == Array){
 				if(bag.indexOfEqual(y)==nil){
 					bag = bag.add(y);
 					}
-				}
+			//	}
 			}
 		}
 	};
