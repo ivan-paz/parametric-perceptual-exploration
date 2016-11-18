@@ -270,12 +270,15 @@
 //                    redundant rules
 //         comming from different compaction orders
 //%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+// For the following entrance
 //(~rules = [
 //	[18,  [28, 242], 1],
 //	[[10,18], 28, 1],
 //	[10, [20,88], 1],
 //	[10, [16,20,28,88], 1]
 //])
+//
+
 
 (~redundant_rules = {
 arg rules;
@@ -283,7 +286,7 @@ var indexes; var result = [];
 var newIntervals, deleteIndexes = [];
 var temporalRules = rules.deepCopy;
 var nonRedundantRules = [];
-indexes = (0 .. rules[0].size - 2);
+if(rules[0].notNil){indexes = (0 .. rules[0].size - 2)};
 indexes.collect{ arg colToExclude;
 //var temporalRules = rules;
 var section, subsets, selection;
@@ -302,9 +305,9 @@ subsets.do{ arg row, i;
 				indexes = indexes.add(j)};
 			}};
 			if(values.size>1){
-//				'indexes'.post;indexes.post;values.postln;
+			'values: '.post; values.post;'indexes: '.post;indexes.postln;
 				deleteIndexes = ~content.value(values,indexes);
-//				'delete indexes : '.post;deleteIndexes.postln
+				//'delete indexes : '.post;deleteIndexes.postln
 			};
 			deleteIndexes.collect({|index| temporalRules[index]=nil})
 		}
@@ -317,19 +320,51 @@ subsets.do{ arg row, i;
 });
 //~nonRedundant = ~redundant_rules.value(~rules);
 //~nonRedundant
+//(~content = {arg values, indexes;
+//	var dictionaries = [];
+//	var deleteIndexes = [];
+//	values.do{ arg x, i;
+//		var dict = Dictionary.new;
+//		var set = Set.new, index;
+//		//x.postln;
+//		x.do{|element| set = set.add(element)};
+//		dict.add('set' -> set);
+//		dict.add('id'-> i.asString);
+//		dictionaries = dictionaries.add(dict)
+//	};
+//	//dictionaries.postln;
+//	dictionaries.do{arg x, i;
+//		dictionaries.do{arg y, j;
+//			if(
+//				( ( x.at('set') & y.at('set') ) == x.at('set') ) &&
+//				(i!=j)
+//			){
+//				//x.at('set').postln;
+//				deleteIndexes = deleteIndexes.add(indexes[i])
+//			}
+//			}};
+//		deleteIndexes
+//});
+//~content.value( [ [20,88], [16,20,28,88] ], [0,1] )
+//~redundant_rules.value(~rules)
+
+
+//~content.value([[135, [12,40]],[0,1]])
+//~rules = Object.readArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
+//~rules.do{|x,i| i.post;'   '.post; x.postln}
 (~content = {arg values, indexes;
 	var dictionaries = [];
 	var deleteIndexes = [];
-	values.do{ arg x, i;
-		var dict = Dictionary.new;
-		var set = Set.new, index;
-		x.postln;
-		x.do{|element| set = set.add(element)};
-		dict.add('set' -> set);
-		dict.add('id'-> i.asString);
-		dictionaries = dictionaries.add(dict)
+	values.do{arg value, i;
+		var dict = Dictionary.new();
+		var set = Set.new();
+		if(value.class==Array){
+		value.do{ |x| set.add(x)}}{
+		set.add(value)};
+		dict.add('id'->i.asString);dict.add('set'-> set);
+		//dict.postln;
+		dictionaries = dictionaries.add(dict);
 	};
-	//dictionaries.postln;
 	dictionaries.do{arg x, i;
 		dictionaries.do{arg y, j;
 			if(
@@ -339,11 +374,10 @@ subsets.do{ arg row, i;
 				//x.at('set').postln;
 				deleteIndexes = deleteIndexes.add(indexes[i])
 			}
-			}};
+		}};
 		deleteIndexes
-});
-//~content.value( [ [20,88], [16,20,28,88] ], [0,1] )
-//~redundant_rules.value(~rules)
+})
+//~content.value([135.960639, 105.081386, 201,[150,152,46253,155.236317]],[0,1,2,3])
 
 
 

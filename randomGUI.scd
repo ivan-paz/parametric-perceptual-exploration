@@ -31,7 +31,7 @@ location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-
 
 
 //--------------------------     WINDOW   --------------------------//
-window = Window.new("Exploring parameters Blip",Rect(650,320,550,450),resizable:true).front;
+window = Window.new("Exploring parameters Blip",Rect(650,320,510,450),resizable:true).front;
 //------------------          system to explore     ------------------
 system = Ndef(\x,{
 	arg freq, numharm, amp;
@@ -382,6 +382,17 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance)}{
 
 )
 
+
+
+//~bagOfRules.do{|x,i| i.post; '   '.post; x.postln}
+
+//a=Set.new()
+
+//b = Set.new()
+//x = [26,67,260,370]
+//x.do({|y| b.add(y)})
+
+//(a & b) == a
 
 
 
