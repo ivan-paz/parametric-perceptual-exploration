@@ -53,22 +53,20 @@ The collected data is shown below.
 | 15 , [ 55.781054, 7.807612, 0.6, 3 ]  | 
 | 16 , [ 55.781054, 1.90927, 0.6, 3 ]   | 
 
-The extracted rules were extracted using [0, inf ] threshold 20, [0, inf] threshold 200 and [0,1] threshold  1 for the respective parameters.
+The extracted rules were extracted using [0, inf ] threshold 10, [0, inf] threshold 200 and [0,1] threshold  1 for the respective parameters.
 
 class 1 <br />  
-0 , [ 5.504405, 20, 0.6, 1 ] <br / >  
-1 , [ 4.294679, 230, 0.6, 1 ] <br / >  
-2 , [ [ 11.354432, 10.203962 ], 20, 0.6, 1 ] <br/>  
-3 , [ [ 1.854298, 7.653983, 15.012693 ], 230, 0.6, 1 ] <br/>  
+0  [ [ 5.504405, 10.203962, 11.354432 ], 20, 0.6, 1 ]<br />  
+1  [ [ 1.854298, 4.294679, 7.653983, 15.012693 ], 230, 0.6, 1 ]<br/ >
 
 class 2 <br />  
-0 , [ 21.10586, 26, 0.6, 2 ] <br />  
-1 , [ [ 20.425354, 24.548191 ], 260, 0.6, 2 ] <br />  
-2 , [ 21.10586, [ 260, 67, 370 ], 0.6, 2 ] <br />  
+0  [ [ 20.425354, 21.10586, 24.548191 ], 260, 0.6, 2 ]<br/ >  
+1  [ 21.10586, [ 26, 67, 260, 370 ], 0.6, 2 ]<br/>  
 
 class 3 <br />  
 0 , [ 99.598908, [ 7.928433, 14.141092 ], 0.6, 3 ] <br />  
 1 , [ 55.781054, [ 7.807612, 1.90927 ], 0.6, 3 ]
+
 
 ### Additive Sawtooth
 Collected data
@@ -93,27 +91,24 @@ Collected data
 | 15 , [ 201, 268.431116, 0.1, 3 ] | 
 | 16 , [ 201, 301, 0.1, 3 ]        | 
 
-The extracted rules used the following intervals and thresholds for the respective parameters: [0, inf] threshold of 10, [0,inf] threshold of 10 and for [0,inf] threshold of 1.
-
-|                                                                        | 
-|------------------------------------------------------------------------| 
-|class 1                                                                 |
-| 0 , [ 101, 20, 0.1, 1 ]                                                | 
-| 1 , [ 101, 76.607595, 0.1, 1 ]                                         | 
-| 2 , [ 101, 50.5, 0.1, 1 ]                                              | 
-| 3 , [ 101, [ 12.133835, 4.173377, 101 ], 0.1, 1 ]  
-|class 2                                                                 | 
-| 0 , [ 152.462853, 101, 0.1, 2 ]                                        | 
-| 1 , [ 135.960639, 101, 0.1, 2 ]                                        | 
-| 2 , [ 105.081368, 101, 0.1, 2 ]                                        | 
-| 3 , [ 155.236317, 101, 0.1, 2 ]                                        | 
-| 4 , [ 201, 101, 0.1, 2 ]                                               | 
-| 5 , [ 150, 101, 0.1, 2 ]
-|class 3                                                                 | 
-| 0 , [ 201, 301, 0.1, 3 ]                                               | 
-| 1 , [ 201, [ 401.877295, 399.408419, 265.83709, 268.431116 ], 0.1, 3 ] | 
+The extracted rules used the following intervals and thresholds for the respective parameters: frequency [0, inf] threshold of 10, frequenc?2 [0,inf] threshold of 10 and for amplitude [0,inf] threshold of 1.
 
 
-???  rules of class 3
+class 1 <br />  
+0 , [ 101, 76.607595, 0.1, 1 ] <br />  
+1 , [ 101, 101, 0.1, 1 ] ] <br/>  
+2 , [ 101, 50.5, 0.1, 1 ] <br/>  
+3 , [ 101, [ 4.173377, 12.133835, 20 ], 0.1, 1 ]<br />  
+
+class 2<br/>  
+0 , [ 135.960639, 101, 0.1, 2 ]<br/>   
+1 , [ 105.081368, 101, 0.1, 2 ] <br/>  
+2 , [ 201, 101, 0.1, 2 ] <br/>  
+3 , [ [ 150, 152.462853, 155.236317 ], 101, 0.1, 2 ] <br />  
+
+class 3 <br/ >  
+0 , [ 201, [ 265.83709, 268.431116, 301 ], 0.1, 3 ] <br />  
+1 , [ 201, [ 399.408419, 401.877295 ], 0.1, 3 ] <br />
+
 
  
