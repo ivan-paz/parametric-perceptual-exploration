@@ -305,7 +305,7 @@ subsets.do{ arg row, i;
 				indexes = indexes.add(j)};
 			}};
 			if(values.size>1){
-			'values: '.post; values.post;'indexes: '.post;indexes.postln;
+			//'values: '.post; values.post;'indexes: '.post;indexes.postln;
 				deleteIndexes = ~content.value(values,indexes);
 				//'delete indexes : '.post;deleteIndexes.postln
 			};

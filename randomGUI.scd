@@ -31,7 +31,7 @@ location = "/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-
 
 
 //--------------------------     WINDOW   --------------------------//
-window = Window.new("Exploring parameters Blip",Rect(650,320,510,450),resizable:true).front;
+window = Window.new("Exploring parameters Blip",Rect(650,330,510,450),resizable:true).front;
 //------------------          system to explore     ------------------
 system = Ndef(\x,{
 	arg freq, numharm, amp;
@@ -156,26 +156,28 @@ ruleExtraction.action = {
 		[ [0, inf],  1 ]
 	]
 ]);
-//  Extract rules
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+//&&&&&&&&&&&&&&      Rule extraction process   &&&&&&&&&&&&&&&&&&&&&
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 ~rules = ~subsetsCompression.value(data,~intervals_and_distances);
 '----------------------------------------------'.postln;
 'Rules : '.postln;
 ~rules.do{arg x, i; 'permutation: '.post;i.postln;x.do{arg y; y.postln}};
 '------------------------------------------------------------'.postln;
 };
-
-
 split = Button.new(window,Rect(195,160,100,30));
 split.states = [['rules by classes']];
 split.action = {
 ~bagOfRules = ~bagOfRules_uncompleted.value(~rules);
 ~nonRedundant = ~redundant_rules.value(~bagOfRules);
-'------------------------------------------------------------'.postln;
+
 ~classes = ~count_classes.value(data);
 ~split = ~splitRules_uncompleted.value(~nonRedundant);
 'Rules by classes : '.postln;
 ~split.do{arg x,i; 'class : '.post;(i+1).postln;x.do{arg y,j; j.post;'  '.post;y.postln}}
 };
+//&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+//%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 text = StaticText.new(window,Rect(195,200,100,10)).string_("-----------------------------");
 
@@ -381,18 +383,4 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance)}{
 }
 
 )
-
-
-
-//~bagOfRules.do{|x,i| i.post; '   '.post; x.postln}
-
-//a=Set.new()
-
-//b = Set.new()
-//x = [26,67,260,370]
-//x.do({|y| b.add(y)})
-
-//(a & b) == a
-
-
 
