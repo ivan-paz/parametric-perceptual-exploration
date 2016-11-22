@@ -279,7 +279,6 @@
 //])
 //
 
-
 (~redundant_rules = {
 arg rules;
 var indexes; var result = [];
@@ -319,39 +318,8 @@ subsets.do{ arg row, i;
 	nonRedundantRules
 });
 //~nonRedundant = ~redundant_rules.value(~rules);
-//~nonRedundant
-//(~content = {arg values, indexes;
-//	var dictionaries = [];
-//	var deleteIndexes = [];
-//	values.do{ arg x, i;
-//		var dict = Dictionary.new;
-//		var set = Set.new, index;
-//		//x.postln;
-//		x.do{|element| set = set.add(element)};
-//		dict.add('set' -> set);
-//		dict.add('id'-> i.asString);
-//		dictionaries = dictionaries.add(dict)
-//	};
-//	//dictionaries.postln;
-//	dictionaries.do{arg x, i;
-//		dictionaries.do{arg y, j;
-//			if(
-//				( ( x.at('set') & y.at('set') ) == x.at('set') ) &&
-//				(i!=j)
-//			){
-//				//x.at('set').postln;
-//				deleteIndexes = deleteIndexes.add(indexes[i])
-//			}
-//			}};
-//		deleteIndexes
-//});
-//~content.value( [ [20,88], [16,20,28,88] ], [0,1] )
-//~redundant_rules.value(~rules)
-
 
 //~content.value([[135, [12,40]],[0,1]])
-//~rules = Object.readArchive("/home/ivan/documents/ia/par_by_par_compression_algorithm/parametric-perceptual-exploration/data");
-//~rules.do{|x,i| i.post;'   '.post; x.postln}
 (~content = {arg values, indexes;
 	var dictionaries = [];
 	var deleteIndexes = [];
@@ -378,6 +346,4 @@ subsets.do{ arg row, i;
 		deleteIndexes
 })
 //~content.value([135.960639, 105.081386, 201,[150,152,46253,155.236317]],[0,1,2,3])
-
-
 
