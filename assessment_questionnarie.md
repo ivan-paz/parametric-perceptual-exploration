@@ -9,7 +9,7 @@ Extracted rules:
 |strongly agree|agree|neurtal|disagree|strongly disagree|
 |--------------|-----|-------|--------|-----------------|
 |              |     |       |        |                 |
-
+|              |     |       |        |                 |
 ##1. Data adquisition process
 
 ###Interface
