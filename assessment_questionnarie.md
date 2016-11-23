@@ -15,7 +15,7 @@ Do you consider that the interface is intuitive and suitable for exploring the s
 Yes     No
 
 ###Instructions
-Do you think the instructions are a natural way to perform changes in the parameters?
+Do you feel the instructions as a natural way to explore changes in the parameters?
 
 Yes     No
 
@@ -35,3 +35,4 @@ Yes     No
 ###Novelty
 Do you find novelty in the unheard patterns?
 
+Yes     No
