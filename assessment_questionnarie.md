@@ -6,13 +6,18 @@ System parameters for rule extraction:
 
 Extracted rules:
 
+##0. Evaluation
+
+|1  |2  |3  |4  |5  |
+|---|---|---|---|---|
+|strongly agree|agree|neurtal|disagree|strongly disagree|
 
 ##1. Data adquisition process
 
 ###Interface
 Do you consider that the interface is intuitive and suitable for exploring the space of parameter combinations?
 
-Yes     No
+1  2  3  4  5
 
 ###Instructions
 Do you feel the instructions as a natural way to explore changes in the parameters?
