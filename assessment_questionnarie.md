@@ -3,27 +3,34 @@ Data:
 
 System parameters for rule extraction:
 
-
-Extracted rules:
-
-|strongly agree|agree|neurtal|disagree|strongly disagree|
-|--------------|-----|-------|--------|-----------------|
-|              |     |       |        |                 |
-|              |     |       |        |                 |
 ##1. Data adquisition process
 
 ###Interface
 Do you consider that the interface is intuitive and suitable for exploring the space of parameter combinations?
 
+|strongly agree|agree|neurtal|disagree|strongly disagree|
+|--------------|-----|-------|--------|-----------------|
+|              |     |       |        |                 |
+|              |     |       |        |                 |
+
 ###Instructions
 Do you feel the instructions given by the interviewer are an efficient way to explore changes in the parameters?
+
+|strongly agree|agree|neurtal|disagree|strongly disagree|
+|--------------|-----|-------|--------|-----------------|
+|              |     |       |        |                 |
+|              |     |       |        |                 |
 
 
 
 ##2. Extracted rules
 Do the rules give you interpretable information about the relation of the parameter values with the perceptual classification of the output?
 
-Yes     No
+|strongly agree|agree|neurtal|disagree|strongly disagree|
+|--------------|-----|-------|--------|-----------------|
+|              |     |       |        |                 |
+|              |     |       |        |                 |
+
 
 ##3. Generalization
 
