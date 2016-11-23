@@ -1,7 +1,7 @@
 # Assessment questionnarie
-Data set:
+Data:
 
-System parameters:
+System parameters for rule extraction:
 
 
 Extracted rules:
