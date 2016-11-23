@@ -41,4 +41,8 @@ Do the rules give you interpretable information about the relation of the parame
 ###Novelty
 Do you find novelty in the unheard patterns?
 
-Yes     No
+|strongly agree|agree|neurtal|disagree|strongly disagree|
+|--------------|-----|-------|--------|-----------------|
+|              |     |       |        |                 |
+|              |     |       |        |                 |
+
