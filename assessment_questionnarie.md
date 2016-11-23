@@ -21,8 +21,6 @@ Do you feel the instructions given by the interviewer are an efficient way to ex
 |              |     |       |        |                 |
 |              |     |       |        |                 |
 
-
-
 ##2. Extracted rules
 Do the rules give you interpretable information about the relation of the parameter values with the perceptual classification of the output?
 
@@ -30,8 +28,6 @@ Do the rules give you interpretable information about the relation of the parame
 |--------------|-----|-------|--------|-----------------|
 |              |     |       |        |                 |
 |              |     |       |        |                 |
-
-
 ##3. Generalization
 
 ###Accuracy
