@@ -33,5 +33,5 @@ Yes     No
 |No |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |   |
 
 ###Novelty
-Do you find novelty in unheard patterns?
+Do you find novelty in the unheard patterns?
 
