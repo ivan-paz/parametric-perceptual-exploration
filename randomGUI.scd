@@ -191,7 +191,7 @@ saveData.action = {
 csvdata = Button.new(window, Rect(180,255,65,30));
 csvdata.states = [['data csv']];
 csvdata.action = {
-	f = File(location ++ "data.csv","w");
+	f = File(location ++ filename ++ ".csv","w");
 	data.do{arg x, i;
 		f.write(i + "," + x + "\n");
 	};
@@ -200,7 +200,7 @@ csvdata.action = {
 csvrules = Button.new(window, Rect(250,255,65,30));
 csvrules.states = [['rules csv']];
 csvrules.action = {
-	f = File(location ++ "rules.csv","w");
+	f = File(location ++ filename ++ "rules.csv","w");
 	~split.do{arg x;
 		x.do{arg y,j;
 			f.write(j + "," + y + "\n")

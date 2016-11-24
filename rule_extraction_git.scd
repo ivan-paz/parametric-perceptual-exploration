@@ -92,7 +92,7 @@
 	parameter_intervals_and_distances.do{arg x, i;
 		var interval;
 		interval = parameter_intervals_and_distances[i];
-		if(interval[0][0]<value && (value <= interval[0][1])){result=interval[1]};
+		if(interval[0][0]<=value && (value <= interval[0][1])){result=interval[1]};
 	};
 	result
 }
