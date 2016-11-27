@@ -11,14 +11,12 @@ Do you consider that the interface is intuitive and suitable for exploring the s
 |strongly agree|agree|neutral|disagree|strongly disagree|
 |--------------|-----|-------|--------|-----------------|
 |              |     |       |        |                 |
-|              |     |       |        |                 |
 
 ###Instructions
 Do you feel the instructions given by the interviewer are an efficient way to explore changes in the parameters?
 
 |strongly agree|agree|neutral|disagree|strongly disagree|
 |--------------|-----|-------|--------|-----------------|
-|              |     |       |        |                 |
 |              |     |       |        |                 |
 
 ##2. Extracted rules
@@ -27,7 +25,7 @@ Do the rules give you interpretable information about the relation of the parame
 |strongly agree|agree|neutral|disagree|strongly disagree|
 |--------------|-----|-------|--------|-----------------|
 |              |     |       |        |                 |
-|              |     |       |        |                 |
+
 ##3. Generalization
 
 ###Accuracy
@@ -43,6 +41,5 @@ Do you find novelty in the unheard patterns?
 
 |strongly agree|agree|neutral|disagree|strongly disagree|
 |--------------|-----|-------|--------|-----------------|
-|              |     |       |        |                 |
 |              |     |       |        |                 |
 
