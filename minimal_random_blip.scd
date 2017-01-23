@@ -3,7 +3,7 @@
 //    of a simple generative system stored int an Ndef        --
 //                                                            --
 //                           Blip                             --
-//                         Ivan Paz                           --
+//                         Ivan Paz 2017                      --
 //--------------------------------------------------------------
 (
 var window, system, system1;
@@ -56,14 +56,14 @@ play = Button.new(window,Rect(5,110,160,40));
 play.states = [["play"],["stop"]];
 play.action = {arg val; if(val.value==1){system.play;'playing'.postln}{system.stop;'stop'.postln}};
 
-k = Knob.new(window, Rect(5, 170, 40, 40));
+k = Knob.new(window, Rect(15, 170, 40, 40));
 k.action = {arg v; par =  ( a +  ( (b - a) * v.value ) );
 system.set(\freq, par).getKeysValues.postln };
 //k.action_({ |v,x,y,m| postf("freq: %\n", v.value)});
-l = Knob.new(window, Rect(60, 170, 40, 40));
+l = Knob.new(window, Rect(70, 170, 40, 40));
 l.action = {arg v; par1 = ( c + ( (d - c) * v.value  ) );
 system.set(\numharm, par1).getKeysValues.postln };
-m = Knob.new(window, Rect(115, 170, 40, 40));
+m = Knob.new(window, Rect(125, 170, 40, 40));
 m.action = {arg v; par2 = (e + ((f-e)* v.value  ));
 system.set(\amp, par2).getKeysValues.postln };
 
@@ -96,7 +96,7 @@ box6.action = {|val| f = val.value.postln};
 
 //----------------      classification        ----- ------------------
 // 1
-class1 = Button.new(window,Rect(5,380,53,55));
+class1 = Button.new(window,Rect(5,320,53,55));
 class1.states =[['Class 1']];
 class1.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 1'.postln;
@@ -106,7 +106,7 @@ class1.action = {var values, instance = [];
 	'combination already in data'.postln}
 };
 // 2
-class2 = Button.new(window,Rect(60,380,53,55));
+class2 = Button.new(window,Rect(60,320,53,55));
 class2.states =[['Class 2']];
 class2.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 2'.postln;
@@ -116,7 +116,7 @@ class2.action = {var values, instance = [];
 		'combination already in data'.postln}
 };
 // 3
-class3 = Button.new(window,Rect(115,380,53,55));
+class3 = Button.new(window,Rect(115,320,53,55));
 class3.states =[['Class 3']];
 class3.action = {var values, instance = [];
 	values = system.getKeysValues.post; '  Class 3'.postln;
@@ -126,7 +126,7 @@ class3.action = {var values, instance = [];
 		'combination already in data'.postln}
 };
 delete = Button.new(window, Rect(180, 330, 135, 30));
-delete.states = [['Remove last instance']];
+delete.states = [['remove last instance']];
 delete.action = {var size = data.size;
 	if(data.size==1){data = [];'last instance deleted!'.postln}{data = data[0..size - 2];'last instance deleted!'.postln}};
 
@@ -153,7 +153,7 @@ postdata.states = [['show data']];
 postdata.action = {'Data : '.postln;data.do{|x, i| i.post;' '.post; x.postln}};
 
 ruleExtraction = Button.new(window,Rect(195, 120, 100, 30));
-ruleExtraction.states = [['Rule Extraction']];
+ruleExtraction.states = [['rule extraction']];
 ruleExtraction.action = {
 (~intervals_and_distances = [
 	[
@@ -266,44 +266,44 @@ selectInstance.action = { |val|
 };
 //   ----------------------------------
 ~class = 0;
-Tdef(\sending,{ arg values, rule;
-	inf.do{
-		10.do{
-			rule = ~selectRule.value(~split,~class);
-			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
-			\amp, rule[2]);
-			[ 7, 3, 5].choose.wait;
-		};
-		5.do{
-			rule = ~selectRule.value(~split,~class);
-			rule.postln;
-			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
-			\amp, rule[2]);
-			[1, 0.5, 0.25].choose.wait;
-		}
-	}
-});
+//Tdef(\sending,{ arg values, rule;
+//	inf.do{
+//		10.do{
+//			rule = ~selectRule.value(~split,~class);
+//			rule.postln;
+//			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+//			\amp, rule[2]);
+//			[ 7, 3, 5].choose.wait;
+//		};
+//		5.do{
+//			rule = ~selectRule.value(~split,~class);
+//			rule.postln;
+//			Ndef(\x).set(\freq, rule[0], \numharm, rule[1],
+//			\amp, rule[2]);
+//			[1, 0.5, 0.25].choose.wait;
+//		}
+//	}
+//});
 //---------------------------------------------------------
-tdef = Button.new(window,Rect(350,170,100,50));
-tdef.states = [['Sequence'],['Stop']];
-tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{Tdef(\sending).stop; 'stop'.postln }};
+//tdef = Button.new(window,Rect(350,170,100,50));
+//tdef.states = [['Sequence'],['Stop']];
+//tdef.action = {|val| if(val.value == 1){Tdef(\sending).play; 'playing'.postln}{Tdef(\sending).stop; 'stop'.postln }};
 
-playclass1 = Button.new(window,Rect(330,230,53,55));
+playclass1 = Button.new(window,Rect(330,110,53,55));
 playclass1.states =[['Play-1']];
 playclass1.action = {var rule;
 	~class = 0; 'class 1 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
 	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2]);
 };
-playclass2 = Button.new(window,Rect(390,230,53,55));
+playclass2 = Button.new(window,Rect(390,110,53,55));
 playclass2.states =[['Play-2']];
 playclass2.action = {var rule;
 	~class = 1; 'class 2 selected'.postln;
 	rule = ~selectRule.value(~split,~class).postln;
 	system.set(\freq,rule[0],\numharm,rule[1],\amp,rule[2])
 };
-playclass3 = Button.new(window,Rect(450,230,53,55));
+playclass3 = Button.new(window,Rect(450,110,53,55));
 playclass3.states =[['Play-3']];
 playclass3.action = {var rule;
 	~class = 2; 'class 3 selected'.postln;
@@ -316,7 +316,7 @@ playclass3.action = {var rule;
 //        with random values taken from the intervals
 //               created during the compression
 //////////////////////////////////////////////////////////////
-try1 = Button.new(window, Rect(330, 300, 53, 55));
+try1 = Button.new(window, Rect(330, 200, 53, 55));
 try1.states = [['Try-1']];
 try1.action = {var rule, newInstance;
 	rule = ~split[0].choose;
@@ -324,7 +324,7 @@ try1.action = {var rule, newInstance;
 	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
-try2 = Button.new(window, Rect(390, 300, 53, 55));
+try2 = Button.new(window, Rect(390, 200, 53, 55));
 try2.states = [['Try-2']];
 try2.action = {var rule, newInstance;
 	rule = ~split[1].choose;
@@ -332,7 +332,7 @@ try2.action = {var rule, newInstance;
 	system.set(\freq, newInstance[0], \numharm, newInstance[1], \amp, newInstance[2]);
 	newInstance.postln
 };
-try3 = Button.new(window, Rect(450, 300, 53, 55));
+try3 = Button.new(window, Rect(450, 200, 53, 55));
 try3.states = [['Try-3']];
 try3.action = {var rule, newInstance;
 	rule = ~split[2].choose;
@@ -341,14 +341,14 @@ try3.action = {var rule, newInstance;
 	newInstance.postln
 };
 
-text1 = StaticText.new(window,Rect(330,340,200,50)).string_("----------------------------------------");
+text1 = StaticText.new(window,Rect(330,250,200,50)).string_("----------------------------------------");
 
 //------------------------------------------------------------//
 //                  classify unseen combinations              //
 //                         if necessary                       //
 //----------------------------------------------------------- //
 // 1
-class1 = Button.new(window,Rect(330,380,53,55));
+class1 = Button.new(window,Rect(330,320,53,55));
 class1.states =[['Class 1']];
 class1.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 1'.postln;
@@ -359,7 +359,7 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance
 	'combination already in data'.postln}
 };
 // 2
-class2 = Button.new(window,Rect(330+60,380,53,55));
+class2 = Button.new(window,Rect(330+60,320,53,55));
 class2.states =[['Class 2']];
 class2.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 2'.postln;
@@ -370,7 +370,7 @@ if(data.indexOfEqual(instance).isNil){data = data.add(instance
 	'combination already in data'.postln}
 };
 // 3
-class3 = Button.new(window,Rect(330+120,380,53,55));
+class3 = Button.new(window,Rect(330+120,320,53,55));
 class3.states =[['Class 3']];
 class3.action = {var values, instance = [];
 values = system.getKeysValues.post; ' classified as Class 3'.postln;
@@ -390,6 +390,7 @@ instance = instance.add(4);
 if(data.indexOfEqual(instance).isNil){data = data.add(instance)}{
 'this combination was already saved'.postln}
 }
+
 
 )
 
