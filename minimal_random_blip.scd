@@ -11,7 +11,7 @@ var boot, location;
 var data = [ ];
 var initialize, play, random, random1, random2;
 var par, par1, par2;
-var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=300,e=0,f=1;
+var box1,box2,box3,box4,box5,box6,a=0,b=400,c=0,d=100,e=0,f=1;
 var class1, class2, class3, class4;
 var delete, deleteInstance, selectInstance, number=nil;
 var name, filename;
@@ -157,10 +157,10 @@ ruleExtraction.states = [['rule extraction']];
 ruleExtraction.action = {
 (~intervals_and_distances = [
 	[
-		[ [0,inf],  10 ]
+		[ [0,inf],  inf ]
 	],
 	[
-		[ [0,inf],  200 ]
+		[ [0,inf],  inf ]
 	],
 	[
 		[ [0, inf],  1 ]
