@@ -70,7 +70,7 @@
 	{array.size>0}.while{
 		var diff, distance;
 		array = ~insertionSort.value(array,indexesOfParameterValues)[0];
-		distance = ~allowed_distance.value(parameter_intervals_and_distances,array.first);
+		distance = ~allowed_distance.value(parameter_intervals_and_distances,array.first);// The threshold is calculated for the first element
 		ta = ta.add(array.first);
 		array = array[1..];
 		if(array.first.notNil){
