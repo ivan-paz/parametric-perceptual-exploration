@@ -86,13 +86,13 @@
 		sets.collect{arg set; if(set.size>1){final_sets =final_sets.add(set)}};
 		final_sets
 	});
-//TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT
+
 (~allowed_distance={arg parameter_intervals_and_distances, value;
 	var result;
 	parameter_intervals_and_distances.do{arg x, i;
 		var interval;
 		interval = parameter_intervals_and_distances[i];
-		if(interval[0][0]<=value && (value <= interval[0][1])){result=interval[1]};
+		if(interval[0][0]<=value && (value <= interval[0][1])){result=interval[1]};//The Threshold is selected here!
 	};
 	result
 }
