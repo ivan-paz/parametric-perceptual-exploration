@@ -1,6 +1,6 @@
 //--------------------------------------------------------------
 //    Minimal gui for perceptual parametric exploration       --
-//    of a simple generative system stored int an Ndef        --
+//    of a simple generative system stored into an Ndef        --
 //                                                            --
 //                           Blip                             --
 //                         Ivan Paz 2017                      --
